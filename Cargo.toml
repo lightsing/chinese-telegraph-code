@@ -4,4 +4,5 @@ version = "0.1.0"
 authors = ["lightsing <light.tsing@gmail.com>"]
 
 [dependencies]
-rust-lzma = "0.4.0"
+lzma-rs = "0.1.0"
+bytebuffer = "0.2.1"
