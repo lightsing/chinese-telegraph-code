@@ -1,17 +1,29 @@
-static N: u8 = 10;
+extern crate lzma;
 
-struct CodeNode {
+static N: usize = 10;
+
+#[derive(Clone)]
+pub struct CodeNode {
     child: Vec<Option<Box<CodeNode>>>,
-    val: Option<Box<char>>
+    val: Box<Option<char>>
 }
 
-pub fn create_code_node(val:Option<char>) -> Box<CodeNode> {
-    return Box::new(CodeNode{child: vec![None; N], val: Some(Box::new(val?)) });
+pub fn create_code_node(val: Option<char>) -> Box<CodeNode> {
+    Box::new(CodeNode{child: vec![None; N], val: Box::new(val) })
+}
+
+pub fn init() -> Vec<u8> {
+    match lzma::decompress(include_bytes!("code2char-src.txt.xz")) {
+        Ok(decompressed) => decompressed,
+        Err(error) => {
+            panic!("There was a problem decompress the source file: {:?}", error)
+        }
+    }
 }
 
 impl CodeNode {
-    fn insert(&mut self, index:u8, node:Box<CodeNode>) {
+    pub fn insert(&mut self, index: usize, node:Box<CodeNode>) {
         assert!(index < N);
-        self.child[index] = node
+        self.child[index] = Some(node)
     }
 }
